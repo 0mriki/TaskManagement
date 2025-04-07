@@ -77,7 +77,7 @@ namespace TaskManagement.Controllers
                 if (taskItem == null)
                 {
                     _logger.LogWarning($"Task with id {id} wasn't found");
-                    return NotFound($"No task found with id {id}");
+                    return NotFound(new { Message = $"No task found with id {id}" });
                 }
                 return Ok(taskItem);
             }

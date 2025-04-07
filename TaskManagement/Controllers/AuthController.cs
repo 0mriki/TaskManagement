@@ -49,7 +49,7 @@ namespace TaskManagement.Controllers
 
                 var response = await _cognitoClient.AdminCreateUserAsync(createRequest);
                 _logger.LogInformation($"User with username {request.Username} created successfully");
-                return Ok("User created successfully. Note: your password is temporary. Please change it to a permanant password.");
+                return Ok(new { Message = "User created successfully. Note: your password is temporary. Please change it to a permanant password." });
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace TaskManagement.Controllers
 
                 if (authResponse.AuthenticationResult != null)
                 {
-                    return Ok(authResponse.AuthenticationResult.AccessToken);
+                    return Ok( new { accessToken = authResponse.AuthenticationResult.AccessToken });
                 }
                 else
                 {

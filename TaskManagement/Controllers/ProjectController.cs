@@ -53,7 +53,7 @@ namespace TaskManagement.Controllers
                 if (project == null)
                 {
                     _logger.LogWarning($"Project with id {Id} wasn't found");
-                    return NotFound($"No project found with id {Id}");
+                    return NotFound(new { Message = $"No project found with id {Id}" });
                 }
                 return Ok(project);
             }
