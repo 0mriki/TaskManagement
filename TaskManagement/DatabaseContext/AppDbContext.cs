@@ -8,6 +8,14 @@ namespace TaskManagement.DatabaseContext
         public DbSet<Project> Projects { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
 
+        public AppDbContext(DbContextOptions options) : base(options)
+        {
+
+        }
+        public AppDbContext()
+        {
+
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
