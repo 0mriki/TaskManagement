@@ -58,7 +58,11 @@ Before using the API, ensure you have the following installed:
     ```bash
     cd TaskManagement
     ```
-3.  **Running the Application:**
+3.  **Configuration:**
+   * Open appsettings.json in the project directory
+   *  Replace the marked parameters with the ones provided in mail
+      ![image](https://github.com/user-attachments/assets/a2d94ded-a684-4f19-9c9a-68e0c4271471)
+4.  **Running the Application:**
 
     * **Using Command Line (CMD):**
         1.  Open CMD in the directory containing the `.csproj` file.
