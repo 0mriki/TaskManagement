@@ -1,19 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TaskManagement.Models
+﻿namespace TaskManagement.Models
 {
     public class Project
     {
+        /// <summary>
+        /// Project's identifier
+        /// </summary>
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Project's name
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Project's description
+        /// </summary>
         public string Description { get; set; }
 
-        public List<Task> Tasks { get; set; }
+        /// <summary>
+        /// Project's tasks
+        /// </summary>
+        public List<TaskItem> Tasks { get; set; }
 
-
+        public Project()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }
