@@ -1,37 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using TaskManagement.Models.Enums;
+using TaskManagement.Models;
+using TaskManagement.DTOs;
 
-namespace TaskManagement.Models
+public class TaskItem
 {
-    public class TaskItem
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid ProjectId { get; set; }
+
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public StatusEnum Status { get; set; }
+    public TaskItem()
+    { }
+
+    public TaskItem(TaskItemView taskItemView, Guid taskId= default(Guid))
     {
-        /// <summary>
-        /// Task's identifier
-        /// </summary>
-        public Guid Id { get; set; }
-        [ForeignKey("project")]
-        
-        public Guid ProjectId { get; set; }
-
-        /// <summary>
-        /// Task's title
-        /// </summary>
-        public string Title { get; set; }
-        
-        /// <summary>
-        /// Task's description
-        /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        /// Task's status
-        /// </summary>
-        public StatusEnum Status { get; set; }
-        
-        public enum StatusEnum { Todo, InProgress, Done};
-
-        public TaskItem()
-        {
-            Id = Guid.NewGuid();
-        }
+        this.Title = taskItemView.Title;
+        this.Status = taskItemView.Status;  
+        this.ProjectId = taskItemView.ProjectId;   
+        this.Description = taskItemView.Description;   
+        this.Id = taskId != Guid.Empty? taskId : Guid.NewGuid(); 
     }
 }

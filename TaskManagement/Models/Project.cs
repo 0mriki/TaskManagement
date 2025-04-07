@@ -1,30 +1,20 @@
-﻿namespace TaskManagement.Models
+﻿using TaskManagement.DTOs;
+
+namespace TaskManagement.Models
 {
     public class Project
     {
-        /// <summary>
-        /// Project's identifier
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Project's name
-        /// </summary>
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
-
-        /// <summary>
-        /// Project's description
-        /// </summary>
         public string Description { get; set; }
 
-        /// <summary>
-        /// Project's tasks
-        /// </summary>
-        public List<TaskItem> Tasks { get; set; }
-
-        public Project()
+        public List<TaskItem> Tasks { get; set; } = new(); 
+        public Project() { }
+        public Project(ProjectView projectView, Guid projectId=default(Guid)) // only for new project created
         {
-            Id = Guid.NewGuid();
+            this.Name= projectView.Name;
+            this.Description= projectView.Description;  
+            this.Id= projectId!= Guid.Empty? projectId : Guid.NewGuid();
         }
     }
 }

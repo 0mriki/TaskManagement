@@ -24,6 +24,7 @@ namespace TaskManagement.Controllers
             BasicAWSCredentials credentials = new BasicAWSCredentials(_cognitoSettings.AccessKey, _cognitoSettings.SecretAccessKey);
             _cognitoClient = new AmazonCognitoIdentityProviderClient(credentials, RegionEndpoint.EUNorth1);
         }
+
         /// <summary>
         /// User signup for cognito
         /// </summary>
@@ -57,6 +58,7 @@ namespace TaskManagement.Controllers
                 return StatusCode(500);
             }
         }
+
         /// <summary>
         /// Changes cognito user's temporary password. Note: it also confirms the user. 
         /// </summary>
@@ -85,6 +87,7 @@ namespace TaskManagement.Controllers
                 return StatusCode(500);
             }
         }
+
         /// <summary>
         /// Returns access token by username and password authorization via cognito
         /// </summary>

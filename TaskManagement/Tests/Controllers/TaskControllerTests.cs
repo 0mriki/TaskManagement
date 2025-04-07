@@ -4,6 +4,7 @@ using TaskManagement.Controllers;
 using TaskManagement.Models;
 using TaskManagement.Services.Interfaces;
 using Xunit;
+using TaskManagement.DTOs;
 
 namespace TaskManagement.Tests.Controllers
 {
@@ -43,7 +44,7 @@ namespace TaskManagement.Tests.Controllers
         public async Task GetTasksOfProject_WithEmptyProjectId_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.GetTasksOfProject(Guid.Empty);
+            IActionResult result = await _controller.GetTasksOfProject(Guid.Empty);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);
@@ -53,19 +54,19 @@ namespace TaskManagement.Tests.Controllers
         public async Task Get_WithValidId_ReturnsOk()
         {
             // Arrange
-            var taskId = Guid.NewGuid();
-            var expectedTask = new TaskItem { Id = taskId, Title = "Test Task" };
+            Guid taskId = Guid.NewGuid();
+            TaskItem expectedTask = new TaskItem { Id = taskId, Title = "Test Task" };
 
             _taskServiceMock
                 .Setup(service => service.Get(taskId))
                 .ReturnsAsync(expectedTask);
 
             // Act
-            var result = await _controller.GetTask(taskId);
+            IActionResult result = await _controller.GetTask(taskId);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var task = Assert.IsType<TaskItem>(okResult.Value);
+            OkObjectResult okResult = Assert.IsType<OkObjectResult>(result);
+            TaskItem task = Assert.IsType<TaskItem>(okResult.Value);
             Assert.Equal(expectedTask.Id, task.Id);
             Assert.Equal(expectedTask.Title, task.Title);
         }
@@ -81,7 +82,7 @@ namespace TaskManagement.Tests.Controllers
                 .ReturnsAsync((TaskItem)null);
 
             // Act
-            var result = await _controller.GetTask(taskId);
+            IActionResult result = await _controller.GetTask(taskId);
 
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
@@ -92,14 +93,14 @@ namespace TaskManagement.Tests.Controllers
         public async Task Create_WithValidTask_ReturnsOk()
         {
             // Arrange
-            var taskItem = new TaskItem { Id = Guid.NewGuid(), Title = "New Task" };
-
+            TaskItemView taskItemView = new TaskItemView { Title = "New Task" };
+            TaskItem taskItem= new TaskItem(taskItemView);
             _taskServiceMock
                 .Setup(service => service.Create(taskItem))
                 .ReturnsAsync(true);
 
             // Act
-            var result = await _controller.CreateTask(taskItem);
+            IActionResult result = await _controller.CreateTask(taskItemView);
 
             // Assert
             Assert.IsType<OkResult>(result);
@@ -109,7 +110,7 @@ namespace TaskManagement.Tests.Controllers
         public async Task Create_WithNullTask_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.CreateTask(null);
+            IActionResult result = await _controller.CreateTask(null);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);
@@ -119,14 +120,15 @@ namespace TaskManagement.Tests.Controllers
         public async Task Update_WithValidTask_ReturnsOk()
         {
             // Arrange
-            var taskItem = new TaskItem { Id = Guid.NewGuid(), Title = "Updated Task" };
+            TaskItemView taskItemView = new TaskItemView { Title = "Updated Task" };
+            TaskItem taskItem = new TaskItem(taskItemView);
 
             _taskServiceMock
                 .Setup(service => service.Update(taskItem))
                 .ReturnsAsync(true);
 
             // Act
-            var result = await _controller.UpdateTask(taskItem);
+            IActionResult result = await _controller.UpdateTask(taskItemView, taskItem.Id);
 
             // Assert
             Assert.IsType<OkResult>(result);
@@ -136,7 +138,7 @@ namespace TaskManagement.Tests.Controllers
         public async Task Update_WithInvalidTask_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.UpdateTask(null);
+            IActionResult result = await _controller.UpdateTask(null, Guid.Empty);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);
@@ -153,7 +155,7 @@ namespace TaskManagement.Tests.Controllers
                 .ReturnsAsync(true);
 
             // Act
-            var result = await _controller.DeleteTask(taskId);
+            IActionResult result = await _controller.DeleteTask(taskId);
 
             // Assert
             Assert.IsType<OkResult>(result);
@@ -163,7 +165,7 @@ namespace TaskManagement.Tests.Controllers
         public async Task Delete_WithInvalidId_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.DeleteTask(Guid.Empty);
+            IActionResult result = await _controller.DeleteTask(Guid.Empty);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);

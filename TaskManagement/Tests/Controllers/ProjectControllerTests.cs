@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using TaskManagement.Controllers;
+using TaskManagement.DTOs;
 using TaskManagement.Models;
 using TaskManagement.Services.Interfaces;
 using Xunit;
@@ -63,14 +64,15 @@ namespace TaskManagement.Tests.Controllers
         public async Task Create_WithValidProject_ReturnsOk()
         {
             // Arrange
-            Project project = new Project { Id = Guid.NewGuid(), Name = "New Project" };
+            ProjectView projectView = new ProjectView { Name = "New Project" };
+            Project project = new Project(projectView);
 
             _projectServiceMock
                 .Setup(service => service.Create(project))
                 .ReturnsAsync(true);
 
             // Act
-            var result = await _controller.CreateProject(project);
+            var result = await _controller.CreateProject(projectView);
 
             // Assert
             Assert.IsType<OkResult>(result);
@@ -87,17 +89,17 @@ namespace TaskManagement.Tests.Controllers
         }
 
         [Fact]
-        public async Task Update_WithValidTask_ReturnsOk()
+        public async Task Update_WithValidProject_ReturnsOk()
         {
             // Arrange
-            Project project = new Project { Id = Guid.NewGuid(), Name = "Updated Project" };
-
+            ProjectView projectView = new ProjectView { Name = "Updated Project" };
+            Project project = new Project(projectView);
             _projectServiceMock
                 .Setup(service => service.Update(project))
                 .ReturnsAsync(true);
 
             // Act
-            IActionResult result = await _controller.UpdateProject(project);
+            IActionResult result = await _controller.UpdateProject(projectView, project.Id);
 
             // Assert
             Assert.IsType<OkResult>(result);
@@ -107,7 +109,7 @@ namespace TaskManagement.Tests.Controllers
         public async Task Update_WithInvalidProject_ReturnsBadRequest()
         {
             // Act
-            var result = await _controller.UpdateProject(null);
+            var result = await _controller.UpdateProject(null, Guid.Empty);
 
             // Assert
             Assert.IsType<BadRequestResult>(result);

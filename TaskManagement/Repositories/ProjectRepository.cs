@@ -38,9 +38,16 @@ namespace TaskManagement.Repositories
         {
             try
             {
-                await _context.Projects.Where(i => i.Id == Id).ExecuteDeleteAsync();
+                int deletedRedcordsCount = await _context.Projects.Where(i => i.Id == Id).ExecuteDeleteAsync();
 
-                _logger.LogInformation($"Project with id {Id} was successfuly deleted");
+                if (deletedRedcordsCount == 0)
+                {
+                    _logger.LogWarning($"No project with id {Id} was found");
+                } else
+                {
+                    _logger.LogInformation($"Project with id {Id} was successfuly deleted");
+                }
+                        
                 return true;
             }
             catch (Exception ex)
@@ -90,7 +97,6 @@ namespace TaskManagement.Repositories
         {
             try
             {
-
                 _context.Projects.Update(project);
                 await _context.SaveChangesAsync();
 

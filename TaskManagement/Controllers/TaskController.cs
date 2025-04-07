@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagement.DTOs;
 using TaskManagement.Models;
 using TaskManagement.Services.Interfaces;
 
@@ -89,21 +90,23 @@ namespace TaskManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(TaskItem taskItem)
+        public async Task<IActionResult> CreateTask(TaskItemView taskViewItem)
         {
             bool isCreated = false;
-            if (taskItem == null)
+            if (taskViewItem == null || taskViewItem?.ProjectId == Guid.Empty)
             {
+                _logger.LogWarning("Task is empty or doesn't contain project id");
                 return BadRequest();
             }
             try
             {
-                isCreated = await _taskService.Create(taskItem);
+                TaskItem task = new TaskItem(taskViewItem);
+                isCreated = await _taskService.Create(task);
                 if (!isCreated)
                 {
                     return StatusCode(500);
                 }
-                return Ok();
+                return Ok(new {taskId= task.Id});
             }
             catch (Exception ex)
             {
@@ -112,17 +115,18 @@ namespace TaskManagement.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateTask([FromBody] TaskItem taskItem)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTask([FromBody] TaskItemView taskItemView, Guid id)
         {
-            if (taskItem == null || taskItem.Id == Guid.Empty)
+            if (taskItemView == null || id == Guid.Empty)
             {
                 return BadRequest();
             }
 
             try
             {
-                bool isUpdated = await _taskService.Update(taskItem);
+                TaskItem task = new TaskItem(taskItemView, id);
+                bool isUpdated = await _taskService.Update(task);
                 if (!isUpdated)
                 {
                     return StatusCode(500);
