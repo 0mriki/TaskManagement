@@ -52,7 +52,7 @@ Before using the API, ensure you have the following installed:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/0mriki/TaskManagement.git](https://github.com/0mriki/TaskManagement.git)
+    git clone https://github.com/0mriki/TaskManagement.git
     ```
 2.  **Navigate to the project directory:**
     ```bash
